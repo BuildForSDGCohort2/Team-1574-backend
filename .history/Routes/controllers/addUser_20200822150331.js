@@ -1,0 +1,32 @@
+var cloudinary = require('cloudinary').v2;
+require("../../plugins/cloudinary");
+let User = require("../../models/user")
+
+module.exports.addUser = add;
+
+async function add(req,res){
+
+    try{
+      cloudinary.uploader.upload(req.files.image.path, async function(error, result) {
+        
+        let product = new User({
+          name: req.fields.name,
+          price: req.fields.location,
+          image: result.url,
+          categorys: req.fields.categorys,
+          store: req.fields.store,
+          date: new Date()
+          });
+        result = await product.save();
+      
+        res.send(result);
+      });
+      
+    }catch(e){
+      console.log("error occured");
+      res.send("eror");
+    }
+  
+  };
+
+ 
